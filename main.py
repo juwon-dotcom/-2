@@ -123,8 +123,34 @@ class QuizGame:
             return answer
 
     def add_quiz(self):
-        print("퀴즈 추가 기능은 아직 구현 전입니다.")
+        print()
+        print("===== 퀴즈 추가 =====")
 
+        question = self.get_non_empty_text("문제를 입력하세요: ")
+
+        options = []
+
+        for index in range(1, 5):
+            option = self.get_non_empty_text(f"{index}번 보기를 입력하세요: ")
+            options.append(option)
+
+        answer = self.get_quiz_answer(len(options))
+
+        new_quiz = Quiz(question, options, answer)
+        self.quizzes.append(new_quiz)
+
+        print("퀴즈가 추가되었습니다!")
+
+    def get_non_empty_text(self, message):
+        while True:
+            text = input(message).strip()
+
+            if text == "":
+                print("빈 값은 입력할 수 없습니다.")
+                continue
+
+            return text
+        
     def show_quiz_list(self):
         print()
         print("===== 퀴즈 목록 =====")

@@ -1,8 +1,23 @@
+import json
+
+DATA_FILE = "quiz_data.json"
+
 class Quiz:
     def __init__(self, question, options, answer):
         self.question = question
         self.options = options
         self.answer = answer
+
+    def to_dict(self):
+        return {
+            "question": self.question,
+            "options": self.options,
+            "answer": self.answer
+        }
+
+    @staticmethod
+    def from_dict(data):
+        return Quiz(data["question"], data["options"], data["answer"])
 
     def show(self):
         print(self.question)
@@ -33,6 +48,8 @@ class QuizGame:
             )
         ]
 
+        self.load_data()
+        
     def show_menu(self):
         print()
         print("===== Python Quiz Game =====")
@@ -106,6 +123,7 @@ class QuizGame:
 
         if score > self.best_score:
             self.best_score = score
+            self.save_data()
             print("최고 점수가 갱신되었습니다!")
 
     def get_quiz_answer(self, choice_count):
@@ -138,6 +156,7 @@ class QuizGame:
 
         new_quiz = Quiz(question, options, answer)
         self.quizzes.append(new_quiz)
+        self.save_data()
 
         print("퀴즈가 추가되었습니다!")
 
@@ -168,9 +187,34 @@ class QuizGame:
         print(f"현재 최고 점수: {self.best_score}점")
 
     def exit_game(self):
+        self.save_data()
         print("게임을 종료합니다.")
         self.running = False
 
+    def save_data(self):
+        data = {
+            "best_score": self.best_score,
+            "quizzes": [quiz.to_dict() for quiz in self.quizzes]
+        }
+
+        with open(DATA_FILE, "w", encoding="utf-8") as file:
+            json.dump(data, file, ensure_ascii=False, indent=4)
+
+    def load_data(self):
+        try:
+            with open(DATA_FILE, "r", encoding="utf-8") as file:
+                data = json.load(file)
+
+            self.best_score = data.get("best_score", 0)
+
+            quizzes_data = data.get("quizzes", [])
+            if len(quizzes_data) > 0:
+                self.quizzes = [Quiz.from_dict(quiz_data) for quiz_data in quizzes_data]
+
+        except FileNotFoundError:
+            pass
+        except json.JSONDecodeError:
+            print("저장 파일을 읽는 중 문제가 발생했습니다. 기본 퀴즈를 사용합니다.")
 
 if __name__ == "__main__":
     game = QuizGame()

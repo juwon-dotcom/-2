@@ -1,6 +1,36 @@
+class Quiz:
+    def __init__(self, question, options, answer):
+        self.question = question
+        self.options = options
+        self.answer = answer
+
+    def show(self):
+        print(self.question)
+
+        for index, option in enumerate(self.options, start=1):
+            print(f"{index}. {option}")
+
+
 class QuizGame:
     def __init__(self):
         self.running = True
+        self.quizzes = [
+            Quiz(
+                "Python에서 문자열을 출력할 때 사용하는 함수는?",
+                ["print()", "input()", "len()", "type()"],
+                1
+            ),
+            Quiz(
+                "리스트를 만들 때 사용하는 기호는?",
+                ["{}", "[]", "()", "<>"],
+                2
+            ),
+            Quiz(
+                "조건문을 만들 때 사용하는 키워드는?",
+                ["for", "while", "if", "class"],
+                3
+            )
+        ]
 
     def show_menu(self):
         print()
@@ -50,7 +80,15 @@ class QuizGame:
         print("퀴즈 추가 기능은 아직 구현 전입니다.")
 
     def show_quiz_list(self):
-        print("퀴즈 목록 보기 기능은 아직 구현 전입니다.")
+        print()
+        print("===== 퀴즈 목록 =====")
+
+        if len(self.quizzes) == 0:
+            print("등록된 퀴즈가 없습니다.")
+            return
+
+        for index, quiz in enumerate(self.quizzes, start=1):
+            print(f"{index}. {quiz.question}")
 
     def show_best_score(self):
         print("최고 점수 보기 기능은 아직 구현 전입니다.")

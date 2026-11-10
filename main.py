@@ -56,8 +56,9 @@ class QuizGame:
         print("1. 퀴즈 풀기")
         print("2. 퀴즈 추가")
         print("3. 퀴즈 목록 보기")
-        print("4. 최고 점수 보기")
-        print("5. 종료")
+        print("4. 퀴즈 삭제")
+        print("5. 최고 점수 보기")
+        print("6. 종료")
 
     def get_menu_choice(self):
         try:
@@ -66,8 +67,8 @@ class QuizGame:
             print("숫자를 입력해주세요.")
             return None
 
-        if choice < 1 or choice > 5:
-            print("1부터 5 사이의 숫자를 입력해주세요.")
+        if choice < 1 or choice > 6:
+            print("1부터 6 사이의 숫자를 입력해주세요.")
             return None
 
         return choice
@@ -87,8 +88,10 @@ class QuizGame:
             elif choice == 3:
                 self.show_quiz_list()
             elif choice == 4:
-                self.show_best_score()
+                self.delete_quiz()
             elif choice == 5:
+                self.show_best_score()
+            elif choice == 6:
                 self.exit_game()
 
     def play_quiz(self):
@@ -181,6 +184,34 @@ class QuizGame:
         for index, quiz in enumerate(self.quizzes, start=1):
             print(f"{index}. {quiz.question}")
 
+    def delete_quiz(self):
+        if len(self.quizzes) == 0:
+            print("삭제할 퀴즈가 없습니다.")
+            return
+
+        print()
+        print("===== 퀴즈 삭제 =====")
+
+        for index, quiz in enumerate(self.quizzes, start=1):
+            print(f"{index}. {quiz.question}")
+
+        while True:
+            try:
+                delete_number = int(input("삭제할 퀴즈 번호를 입력하세요: "))
+            except ValueError:
+                print("숫자를 입력해주세요.")
+                continue
+
+            if delete_number < 1 or delete_number > len(self.quizzes):
+                print(f"1부터 {len(self.quizzes)} 사이의 숫자를 입력해주세요.")
+                continue
+
+            deleted_quiz = self.quizzes.pop(delete_number - 1)
+            self.save_data()
+
+            print(f"'{deleted_quiz.question}' 퀴즈가 삭제되었습니다.")
+            break
+    
     def show_best_score(self):
         print()
         print("===== 최고 점수 =====")

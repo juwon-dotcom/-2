@@ -14,6 +14,7 @@ class Quiz:
 class QuizGame:
     def __init__(self):
         self.running = True
+        self.best_score = 0
         self.quizzes = [
             Quiz(
                 "Python에서 문자열을 출력할 때 사용하는 함수는?",
@@ -74,7 +75,52 @@ class QuizGame:
                 self.exit_game()
 
     def play_quiz(self):
-        print("퀴즈 풀기 기능은 아직 구현 전입니다.")
+        if len(self.quizzes) == 0:
+            print("등록된 퀴즈가 없습니다.")
+            return
+
+        score = 0
+
+        print()
+        print("===== 퀴즈 풀기 =====")
+
+        for index, quiz in enumerate(self.quizzes, start=1):
+            print()
+            print(f"[문제 {index}]")
+            print(quiz.question)
+
+            for choice_index, choice in enumerate(quiz.options, start=1):
+                print(f"{choice_index}. {choice}")
+
+            user_answer = self.get_quiz_answer(len(quiz.options))
+
+            if user_answer == quiz.answer:
+                print("정답입니다!")
+                score += 1
+            else:
+                print(f"오답입니다. 정답은 {quiz.answer}번입니다.")
+
+        print()
+        print("===== 결과 =====")
+        print(f"총 {len(self.quizzes)}문제 중 {score}문제를 맞혔습니다.")
+
+        if score > self.best_score:
+            self.best_score = score
+            print("최고 점수가 갱신되었습니다!")
+
+    def get_quiz_answer(self, choice_count):
+        while True:
+            try:
+                answer = int(input("정답 번호를 입력하세요: "))
+            except ValueError:
+                print("숫자를 입력해주세요.")
+                continue
+
+            if answer < 1 or answer > choice_count:
+                print(f"1부터 {choice_count} 사이의 숫자를 입력해주세요.")
+                continue
+
+            return answer
 
     def add_quiz(self):
         print("퀴즈 추가 기능은 아직 구현 전입니다.")
@@ -91,7 +137,9 @@ class QuizGame:
             print(f"{index}. {quiz.question}")
 
     def show_best_score(self):
-        print("최고 점수 보기 기능은 아직 구현 전입니다.")
+        print()
+        print("===== 최고 점수 =====")
+        print(f"현재 최고 점수: {self.best_score}점")
 
     def exit_game(self):
         print("게임을 종료합니다.")

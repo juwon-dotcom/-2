@@ -70,7 +70,7 @@ python main.py
 프로그램은 `state.json`을 UTF-8 인코딩으로 저장하고 불러옵니다.
 
 ## Git 워크플로우
-![alt text](커밋-1.png)
+![alt text](<git log 그래프 결과-1.png>)
 
 ## 제출물
 
@@ -82,8 +82,7 @@ https://github.com/내 아이디/파일 이름
 ![alt text](<개발 환경 설정 1.png>) ![alt text](<개발 환경 설정 2.png>)
 
 ### 프로그램 실행 결과
-![alt text](<퀴즈 1.png>) ![alt text](<퀴즈 2.png>) ![alt text](<퀴즈 3.png>) ![alt text](<퀴즈 4-1.png>) ![alt text](<퀴즈 4-2.png>) ![alt text](<퀴즈 5.png>) ![alt text](<퀴즈 6.png>)
+![alt text](<퀴즈 1.png>)![alt text](<퀴즈 2.png>) ![alt text](<퀴즈 3.png>) ![alt text](<퀴즈 4-1.png>) ![alt text](<퀴즈 4-2.png>) ![alt text](<퀴즈 5.png>) ![alt text](<퀴즈 6.png>) 
 
 ### git log 그래프 결과
 ![alt text](<git log 그래프 결과.png>)
-

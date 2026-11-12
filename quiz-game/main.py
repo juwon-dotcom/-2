@@ -90,9 +90,12 @@ class QuizGame:
             "quizzes": [asdict(quiz) for quiz in self.quizzes]
         }
 
-        with open(STATE_FILE, "w", encoding="utf-8") as file:
-            json.dump(data, file, ensure_ascii=False, indent=2)
-
+        try:
+            with open(STATE_FILE, "w", encoding="utf-8") as file:
+               json.dump(data, file, ensure_ascii=False, indent=2)
+        except OSError:
+            print("파일 저장 중 오류가 발생했습니다.")
+    
     def input_number(self, message, min_value, max_value):
         """정해진 범위 안의 숫자를 입력받습니다."""
         while True:
@@ -234,4 +237,12 @@ class QuizGame:
 
 if __name__ == "__main__":
     game = QuizGame()
-    game.run()
+
+    try:
+        game.run()
+    except KeyboardInterrupt:
+        print("\n프로그램이 사용자에 의해 중단되었습니다.")
+        game.save_state()
+    except EOFError:
+        print("\n입력이 종료되었습니다.")
+        game.save_state()

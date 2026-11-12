@@ -90,17 +90,26 @@ class QuizGame:
         except (json.JSONDecodeError, KeyError, TypeError):
             print("경고: state.json 파일이 손상되었습니다.")
 
-        if os.path.exists("state_backup.json"):
-            print("백업 파일(state_backup.json)에서 복구를 시도합니다.")
+            if os.path.exists("state_backup.json"):
+                print("백업 파일(state_backup.json)에서 복구를 시도합니다.")
 
-            try:
-                shutil.copy2("state_backup.json", "state.json")
-                self.load_state()
-                return
-            except OSError:
-                print("백업 파일 복구에 실패했습니다.")
+                try:
+                    with open("state_backup.json", "r", encoding="utf-8") as file:
+                        data = json.load(file)
 
-            print("state.json 파일을 읽는 중 문제가 발생했습니다.")
+                    self.high_score = data.get("high_score", 0)
+                    self.quizzes = [
+                        Quiz.from_dict(quiz_data)
+                        for quiz_data in data.get("quizzes", [])
+                    ]
+
+                    shutil.copy2("state_backup.json", "state.json")
+                    print("백업 파일로 복구했습니다.")
+                    return
+
+                except (json.JSONDecodeError, KeyError, TypeError, OSError):
+                    print("백업 파일 복구에 실패했습니다.")
+
             print("기본 퀴즈 데이터로 다시 시작합니다.")
             self.quizzes = DEFAULT_QUIZZES.copy()
             self.high_score = 0

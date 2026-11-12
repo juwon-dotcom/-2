@@ -1,5 +1,8 @@
 import json
 import os
+import shutil
+import signal
+import sys
 from dataclasses import dataclass, asdict
 
 
@@ -12,6 +15,7 @@ class Quiz:
     choices: list
     answer: int
 
+DEFAULT_QUIZ_COUNT = 5
 
 DEFAULT_QUIZZES = [
 # 기본 퀴즈 5개: state.json이 없거나 손상된 경우 사용
@@ -77,7 +81,25 @@ class QuizGame:
                 self.quizzes = DEFAULT_QUIZZES.copy()
                 self.save_state()
 
+        except PermissionError:
+            print("읽기 오류: state.json 파일을 읽을 권한이 없습니다.")
+            print("파일 권한, 읽기 전용 설정, 다른 프로그램에서 사용 중인지 확인하세요.")
+            self.set_default_quizzes()
+            self.high_score = 0
+        
         except (json.JSONDecodeError, KeyError, TypeError):
+            print("경고: state.json 파일이 손상되었습니다.")
+
+        if os.path.exists("state_backup.json"):
+            print("백업 파일(state_backup.json)에서 복구를 시도합니다.")
+
+            try:
+                shutil.copy2("state_backup.json", "state.json")
+                self.load_state()
+                return
+            except OSError:
+                print("백업 파일 복구에 실패했습니다.")
+
             print("state.json 파일을 읽는 중 문제가 발생했습니다.")
             print("기본 퀴즈 데이터로 다시 시작합니다.")
             self.quizzes = DEFAULT_QUIZZES.copy()
@@ -85,33 +107,48 @@ class QuizGame:
             self.save_state()
 
     def save_state(self):
-        """퀴즈 데이터와 최고 점수를 state.json에 UTF-8로 저장합니다."""
         data = {
             "high_score": self.high_score,
-            "quizzes": [asdict(quiz) for quiz in self.quizzes]
+            "quizzes": [quiz.to_dict() for quiz in self.quizzes]
         }
 
         try:
-            with open(STATE_FILE, "w", encoding="utf-8") as file:
-               json.dump(data, file, ensure_ascii=False, indent=2)
-        except OSError:
-            print("파일 저장 중 오류가 발생했습니다.")
+            if os.path.exists("state.json"):
+                shutil.copy2("state.json", "state_backup.json")
+
+            temp_file = "state.json.tmp"
+
+            with open(temp_file, "w", encoding="utf-8") as file:
+                json.dump(data, file, ensure_ascii=False, indent=4)
+
+            os.replace(temp_file, "state.json")
+
+        except PermissionError:
+            print("저장 오류: state.json 파일에 쓰기 권한이 없습니다.")
+            print("파일이 읽기 전용인지, 다른 프로그램에서 사용 중인지 확인하세요.")
+
+        except OSError as error:
+            print(f"저장 오류: 파일 저장 중 문제가 발생했습니다. {error}")
     
     def input_number(self, message, min_value, max_value):
-        """정해진 범위 안의 숫자를 입력받습니다."""
         while True:
             user_input = input(message).strip()
+
+            if not user_input:
+                print(f"입력 오류: 값을 입력하세요. ({min_value}~{max_value})")
+                continue
 
             try:
                 number = int(user_input)
             except ValueError:
-                print("숫자를 입력해주세요.")
+                print(f"입력 오류: 숫자만 입력하세요. ({min_value}~{max_value})")
                 continue
 
-            if min_value <= number <= max_value:
-                return number
+            if number < min_value or number > max_value:
+                print(f"입력 오류: {min_value}부터 {max_value} 사이의 숫자를 입력하세요.")
+                continue
 
-            print(f"{min_value}부터 {max_value} 사이의 숫자를 입력해주세요.")
+            return number
 
     def show_menu(self):
         print("\n===== Python Quiz Game =====")
@@ -239,10 +276,17 @@ class QuizGame:
 if __name__ == "__main__":
     game = QuizGame()
 
+    def handle_exit_signal(signum, frame):
+        print("\n종료 신호를 감지했습니다. 현재 상태를 저장합니다.")
+        game.save_state()
+        sys.exit(0)
+
+    signal.signal(signal.SIGTERM, handle_exit_signal)
+
     try:
         game.run()
     except KeyboardInterrupt:
-        print("\n프로그램이 사용자에 의해 중단되었습니다.")
+        print("\n프로그램이 사용자에 의해 중단되었습니다. 현재 상태를 저장합니다.")
         game.save_state()
     except EOFError:
         print("\n입력이 종료되었습니다.")

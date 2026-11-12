@@ -11,9 +11,41 @@ STATE_FILE = "state.json"
 
 @dataclass
 class Quiz:
-    question: str
-    choices: list
-    answer: int
+    def __init__(self, question, choices, answer):
+        self.question = question
+        self.choices = choices
+        self.answer = answer
+
+    def to_dict(self):
+        return {
+            "question": self.question,
+            "choices": self.choices,
+            "answer": self.answer
+        }
+    
+    @classmethod
+    def from_dict(cls, data):
+        question = data["question"]
+        choices = data["choices"]
+        answer = data["answer"]
+
+        if not isinstance(question, str) or not question.strip():
+            raise ValueError("문제는 비어 있을 수 없습니다.")
+
+        if not isinstance(choices, list) or len(choices) == 0:
+            raise ValueError("선택지는 1개 이상이어야 합니다.")
+
+        if not isinstance(answer, int):
+            raise ValueError("정답 번호는 정수여야 합니다.")
+
+        if answer < 1 or answer > len(choices):
+            raise ValueError("정답 번호가 선택지 범위를 벗어났습니다.")
+
+        return cls(
+            question=question,
+            choices=choices,
+            answer=answer
+        )
 
 DEFAULT_QUIZ_COUNT = 5
 
@@ -46,6 +78,8 @@ DEFAULT_QUIZZES = [
     ),
 ]
 
+if len(DEFAULT_QUIZZES) != DEFAULT_QUIZ_COUNT:
+    raise ValueError("기본 퀴즈 개수가 DEFAULT_QUIZ_COUNT와 일치하지 않습니다.")
 
 class QuizGame:
     def __init__(self):
@@ -69,11 +103,7 @@ class QuizGame:
 
             quiz_data = data.get("quizzes", [])
             self.quizzes = [
-                Quiz(
-                    question=item["question"],
-                    choices=item["choices"],
-                    answer=item["answer"]
-                )
+                Quiz.from_dict(item)
                 for item in quiz_data
             ]
 
@@ -84,10 +114,10 @@ class QuizGame:
         except PermissionError:
             print("읽기 오류: state.json 파일을 읽을 권한이 없습니다.")
             print("파일 권한, 읽기 전용 설정, 다른 프로그램에서 사용 중인지 확인하세요.")
-            self.set_default_quizzes()
+            self.quizzes = DEFAULT_QUIZZES.copy()
             self.high_score = 0
         
-        except (json.JSONDecodeError, KeyError, TypeError):
+        except (json.JSONDecodeError, KeyError, TypeError, ValueError):
             print("경고: state.json 파일이 손상되었습니다.")
 
             if os.path.exists("state_backup.json"):
@@ -107,7 +137,7 @@ class QuizGame:
                     print("백업 파일로 복구했습니다.")
                     return
 
-                except (json.JSONDecodeError, KeyError, TypeError, OSError):
+                except (json.JSONDecodeError, KeyError, TypeError, ValueError, OSError):
                     print("백업 파일 복구에 실패했습니다.")
 
             print("기본 퀴즈 데이터로 다시 시작합니다.")

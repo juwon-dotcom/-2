@@ -254,10 +254,28 @@ type: 작업 내용 요약
 git commit -m "퀴즈 추가 기능 구현"
 ```
 
-### 커밋 히스토리 증빙
-의미 있는 커밋 10회 이상을 확인하기 위해 Git 로그를 첨부했습니다.
+### 커밋 로그 증빙
+아래는 의미 있는 커밋 10건 이상을 확인하기 위한 `git log --oneline` 실행 결과입니다.
+```
+PS C:\Users\****\test\작업실\-2\quiz-game> git log --oneline      
+d6b8ec3 백업 코드 수정
+610de74 버그 수정 및 README 정리
+b1c887c 2차 수정
+b920ceb chore: move project files into quiz-game folder
+d161849 운동역학 퀴즈로 변경, README.md 정리
+56850c7 Docs: README 필수 항목 정리
+149e32d Update: 신체 구조 퀴즈와 상태 저장 파일 정리
+d674697 Docs: README 사용법 정리
+bc741c5 Feat: 퀴즈 삭제 기능 구현
+d2e90b7 Feat: 퀴즈 데이터 저장 및 불러오기 구현
+9ccbe45 Feat: 퀴즈 추가 기능 구현
+a208de9 Feat: 퀴즈 풀기와 최고 점수 기능 구현
+cc5fc8c Feat: Quiz 클래스와 기본 퀴즈 데이터 추가
+7543dba Feat: 메뉴 구조와 입력 처리 구현
+875c5fd Init: 프로젝트 초기 파일 생성
+```
 
-![alt text](<증거자료/커밋 히스토리 증빙.png>)
+텍스트 원본: [commit-log.txt](evidence/commit-log.txt)
 
 ### Git clone / pull 실습 증빙
 
@@ -280,4 +298,4 @@ https://github.com/내 아이디/파일 이름
 ![alt text](<증거자료/퀴즈 1.png>) ![alt text](<증거자료/퀴즈 2.png>) ![alt text](<증거자료/퀴즈 3.png>) ![alt text](<증거자료/퀴즈 4-1.png>) ![alt text](<증거자료/퀴즈 4-2.png>) ![alt text](<증거자료/퀴즈 5.png>) ![alt text](<증거자료/퀴즈 6.png>)
 
 ### Git 브랜치 그래프
-![alt text](<브랜치, 병합 히스토리 증빙.png>)
+![alt text](<증거자료/브랜치, 병합 히스토리 증빙.png>)

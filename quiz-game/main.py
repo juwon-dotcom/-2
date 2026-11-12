@@ -14,6 +14,7 @@ class Quiz:
 
 
 DEFAULT_QUIZZES = [
+# 기본 퀴즈 5개: state.json이 없거나 손상된 경우 사용
     Quiz(
         question="운동역학에서 힘의 단위로 알맞은 것은?",
         choices=["kg", "N", "m/s", "J"],

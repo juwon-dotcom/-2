@@ -24,6 +24,7 @@ py main.py
 ```bash
 python main.py
 ```
+![alt text](<증거자료/실행 화면.png>)
 
 ## 기능 목록
 
@@ -34,6 +35,13 @@ python main.py
 - 최고 점수 보기
 - 퀴즈 데이터 저장 및 불러오기
 - 최고 점수 저장
+
+## 기본 퀴즈 데이터
+
+프로그램은 최초 실행 시 기본 퀴즈 5개를 제공합니다.  
+`state.json` 파일이 없거나 손상된 경우에도 기본 퀴즈 목록으로 초기화됩니다.
+
+기본 퀴즈 개수: 5개
 
 ## 파일 구조
 
@@ -70,7 +78,13 @@ python main.py
 프로그램은 `state.json`을 UTF-8 인코딩으로 저장하고 불러옵니다.
 
 ## Git 워크플로우
-![alt text](<git log 그래프 결과-1.png>)
+![alt text](<증거자료/git log 그래프 결과.png>)
+
+## 커밋 히스토리 증빙
+
+의미 있는 커밋 10회 이상을 확인하기 위해 Git 로그를 첨부했습니다.
+
+![최근 커밋 10개](evidence/git-log-10.png)
 
 ## 제출물
 
@@ -79,10 +93,10 @@ python main.py
 https://github.com/내 아이디/파일 이름
 
 ### 개발 환경 설정
-![alt text](<개발 환경 설정 1.png>) ![alt text](<개발 환경 설정 2.png>)
+![alt text](<증거자료/개발 환경 설정 1.png>)![alt text](<증거자료/개발 환경 설정 2.png>)
 
 ### 프로그램 실행 결과
-![alt text](<퀴즈 1.png>)![alt text](<퀴즈 2.png>) ![alt text](<퀴즈 3.png>) ![alt text](<퀴즈 4-1.png>) ![alt text](<퀴즈 4-2.png>) ![alt text](<퀴즈 5.png>) ![alt text](<퀴즈 6.png>) 
+![alt text](<증거자료/퀴즈 1.png>) ![alt text](<증거자료/퀴즈 2.png>) ![alt text](<증거자료/퀴즈 3.png>) ![alt text](<증거자료/퀴즈 4-1.png>) ![alt text](<증거자료/퀴즈 4-2.png>) ![alt text](<증거자료/퀴즈 5.png>) ![alt text](<증거자료/퀴즈 6.png>)
 
 ### git log 그래프 결과
-![alt text](<git log 그래프 결과.png>)
+![alt text](<증거자료/git log 그래프 결과.png>)
